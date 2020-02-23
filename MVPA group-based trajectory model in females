@@ -1,0 +1,58 @@
+Title: 
+3-class MVPA group-based trajectory model in females
+
+Data:
+  File is MVPA_f..dat ;
+
+Variable:
+  Names are 
+     age_12 mvpa_12 age_14 mvpa_14 age_16 mvpa_16 age_25 mvpa_25 id;
+
+USEVARIABLES ARE 
+    mvpa_12 mvpa_14 mvpa_16 mvpa_25;
+    Missing are all (-9999);
+    CLASSES = MVPA (3);
+    AUXILIARY = id;
+
+Analysis:
+   processors = 3 (starts);
+    TYPE = MIXTURE;
+    STARTS = 3500 350;
+    stscale = 25;
+    stiterations = 25;
+
+MODEL:
+  %OVERALL%
+    i s q | mvpa_12@0 mvpa_14@2.1 mvpa_16@3.7 mvpa_25@12.8;
+
+    [mvpa_12@0 mvpa_14@0 mvpa_16@0 mvpa_25@0];
+
+    mvpa_12 mvpa_14 mvpa_16 mvpa_25 (eqresvar);
+
+    [i s q];
+    i@0;
+    s@0;
+    q@0;
+
+    i with s@0;
+    i with q@0;
+    s with q@0;
+
+  %MVPA#1% 
+  [i s q]; 
+ 
+  %MVPA#2% 
+  [i s q];
+
+  %MVPA#3% 
+  [i s q];
+
+OUTPUT: 
+TECH1 TECH4 TECH11;
+
+PLOT: 
+TYPE IS PLOT3; 
+SERIES IS mvpa_12 mvpa_14 mvpa_16 mvpa_25 (*); 
+
+Savedata: file is MVPA_LCGA_3c_f.txt;
+save = cprobabilities;
