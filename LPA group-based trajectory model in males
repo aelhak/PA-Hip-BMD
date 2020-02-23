@@ -1,0 +1,59 @@
+Title: 
+3-class LPA group-based trajectory model in males
+
+Data:
+  File is LPA_m..dat;
+
+Variable:
+  Names are 
+     age_12 lpa_12 age_14 lpa_14 age_16 lpa_16 age_25 lpa_25 id;
+  Missing are all (-9999) ; 
+
+USEVARIABLES ARE 
+    lpa_12 lpa_14 lpa_16 lpa_25;
+    Missing are all (-9999);
+    CLASSES = LPA (3);
+    AUXILIARY = id;
+
+Analysis:
+   processors = 4 (starts);
+    TYPE = MIXTURE;
+    STARTS = 3500 350;
+    stscale = 25;
+    stiterations = 25;
+
+MODEL:
+  %OVERALL%
+  i s q | lpa_12@0 lpa_14@2.1 lpa_16@3.7 lpa_25@12.8;
+
+  [lpa_12@0 lpa_14@0 lpa_16@0 lpa_25@0];
+
+  lpa_12 lpa_14 lpa_16 lpa_25 (eqresvar);
+
+  [i s q];
+  i@0;
+  s;
+  q@0;
+
+  i with s@0;
+  i with q@0;
+  s with q@0;
+
+  %LPA#1% 
+  [i s q]; 
+ 
+  %LPA#2% 
+  [i s q];
+
+  %LPA#3% 
+  [i s q];
+  
+OUTPUT: 
+TECH1 TECH4 TECH11;
+
+PLOT: 
+TYPE IS PLOT3; 
+SERIES IS lpa_12 lpa_14 lpa_16 lpa_25 (*); 
+
+Savedata: file is LPA_GMM_S_3c_m.txt;
+save = cprobabilities;
